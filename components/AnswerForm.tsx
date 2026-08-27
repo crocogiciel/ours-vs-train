@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { ResultCard, type CorrelationResult } from "./ResultCard";
 
+const SUPPORT_EMAIL = "guillaume.monrolin@crocogiciel.com";
+
 export function AnswerForm() {
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
   const [result, setResult] = useState<CorrelationResult | null>(null);
 
   async function handleSubmit(event: React.FormEvent) {
@@ -14,7 +16,7 @@ export function AnswerForm() {
     if (!answer.trim() || loading) return;
 
     setLoading(true);
-    setError(null);
+    setError(false);
     setResult(null);
 
     try {
@@ -31,8 +33,8 @@ export function AnswerForm() {
       }
 
       setResult(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+    } catch {
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -41,7 +43,39 @@ export function AnswerForm() {
   function handleReset() {
     setAnswer("");
     setResult(null);
-    setError(null);
+    setError(false);
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <div className="border-2 border-accent p-8">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+            Incident technique
+          </p>
+          <p className="mt-4 font-serif text-lg leading-relaxed">
+            Les scientifiques chargés de l&apos;analyse sont en pause café, veuillez rafraîchir
+            la page quand ils seront de retour. S&apos;ils ne sont pas revenus d&apos;ici
+            quelques minutes c&apos;est qu&apos;ils sont sûrement en vacances aux Caraïbes,
+            veuillez envoyer un mail à leur assistant{" "}
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              className="underline underline-offset-4 hover:text-accent"
+            >
+              {SUPPORT_EMAIL}
+            </a>
+            .
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="border-2 border-ink px-6 py-3 font-mono text-xs uppercase tracking-[0.2em] transition-colors hover:bg-ink hover:text-paper"
+        >
+          Rafraîchir
+        </button>
+      </div>
+    );
   }
 
   if (result) {
@@ -75,10 +109,6 @@ export function AnswerForm() {
           disabled={loading}
         />
       </label>
-
-      {error && (
-        <p className="font-mono text-xs uppercase tracking-[0.15em] text-accent">{error}</p>
-      )}
 
       <button
         type="submit"
