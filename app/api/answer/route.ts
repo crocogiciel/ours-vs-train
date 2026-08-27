@@ -24,13 +24,16 @@ export async function POST(request: Request) {
   try {
     const { score, explanation } = await generateCorrelation(answer);
 
-    await db.insert(answers).values({
-      answerText: answer,
-      score,
-      explanation,
-    });
+    const [inserted] = await db
+      .insert(answers)
+      .values({
+        answerText: answer,
+        score,
+        explanation,
+      })
+      .returning({ id: answers.id });
 
-    return NextResponse.json({ score, explanation });
+    return NextResponse.json({ id: inserted.id, score, explanation });
   } catch (error) {
     console.error("Failed to generate correlation:", error);
     return NextResponse.json(

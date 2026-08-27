@@ -29,51 +29,64 @@ export default async function StatsPage() {
   const recent = rows.slice(0, 20);
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-6 py-12">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-12 px-6 py-16">
       <div>
-        <h1 className="text-2xl font-bold">Statistiques globales</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Toutes les différences entre un ours et un train, analysées par notre institut.
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-accent">
+          Publication périodique
+        </p>
+        <h2 className="mt-3 font-serif text-3xl font-semibold">Bulletin statistique</h2>
+        <p className="mt-2 max-w-prose font-mono text-sm text-ink-muted">
+          Synthèse de l&apos;ensemble des observations soumises au comité.
         </p>
       </div>
 
       {total === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">
-          Aucune réponse pour le moment. Sois le premier à répondre !
+        <p className="border border-line p-6 font-mono text-sm text-ink-muted">
+          Aucune observation enregistrée à ce jour. Soyez le premier contributeur.
         </p>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border border-gray-200 p-4 text-center dark:border-gray-800">
-              <p className="text-3xl font-bold text-amber-700 dark:text-amber-300">{total}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">réponses collectées</p>
+          <div className="grid grid-cols-2 gap-px border border-ink bg-ink">
+            <div className="bg-paper p-6 text-center">
+              <p className="font-serif text-4xl font-semibold tabular-nums">{total}</p>
+              <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-muted">
+                Observations
+              </p>
             </div>
-            <div className="rounded-xl border border-gray-200 p-4 text-center dark:border-gray-800">
-              <p className="text-3xl font-bold text-amber-700 dark:text-amber-300">{average}%</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">corrélation moyenne</p>
+            <div className="bg-paper p-6 text-center">
+              <p className="font-serif text-4xl font-semibold tabular-nums">{average}%</p>
+              <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-muted">
+                Corrélation moyenne
+              </p>
             </div>
           </div>
 
           <div>
-            <h2 className="mb-3 text-lg font-semibold">Distribution des scores</h2>
+            <h3 className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-ink-muted">
+              Fig. 1 — Distribution des indices
+            </h3>
             <ScoreChart buckets={buckets} />
           </div>
 
           <div>
-            <h2 className="mb-3 text-lg font-semibold">Dernières réponses</h2>
-            <ul className="flex flex-col gap-2">
-              {recent.map((row) => (
-                <li
+            <h3 className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-ink-muted">
+              Fig. 2 — Dernières observations
+            </h3>
+            <div className="border border-line">
+              {recent.map((row, i) => (
+                <div
                   key={row.id}
-                  className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 px-4 py-3 text-sm dark:border-gray-800"
+                  className={`flex items-center justify-between gap-4 px-4 py-3 ${
+                    i !== 0 ? "border-t border-line" : ""
+                  }`}
                 >
-                  <span className="flex-1 truncate">{row.answerText}</span>
-                  <span className="shrink-0 font-semibold text-amber-700 dark:text-amber-300">
+                  <span className="truncate font-serif text-sm">{row.answerText}</span>
+                  <span className="shrink-0 font-mono text-sm tabular-nums text-accent">
                     {row.score}%
                   </span>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </>
       )}

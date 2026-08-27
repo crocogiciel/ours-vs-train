@@ -46,37 +46,46 @@ export function AnswerForm() {
 
   if (result) {
     return (
-      <div className="flex flex-col items-center gap-4">
-        <ResultCard score={result.score} explanation={result.explanation} />
+      <div className="flex flex-col items-start gap-4">
+        <ResultCard id={result.id} score={result.score} explanation={result.explanation} />
         <button
           type="button"
           onClick={handleReset}
-          className="text-sm font-medium text-amber-700 underline hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100"
+          className="font-mono text-xs uppercase tracking-[0.2em] text-ink-muted underline underline-offset-4 hover:text-ink"
         >
-          Proposer une autre différence
+          Soumettre une nouvelle observation
         </button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-md flex-col gap-3">
-      <textarea
-        value={answer}
-        onChange={(event) => setAnswer(event.target.value)}
-        maxLength={500}
-        rows={3}
-        placeholder="Ex : le pelage"
-        className="w-full resize-none rounded-xl border border-gray-300 bg-white p-4 text-base shadow-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 dark:border-gray-700 dark:bg-gray-900"
-        disabled={loading}
-      />
-      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <label className="flex flex-col gap-2">
+        <span className="font-mono text-xs uppercase tracking-[0.2em] text-ink-muted">
+          01 — Différence observée
+        </span>
+        <textarea
+          value={answer}
+          onChange={(event) => setAnswer(event.target.value)}
+          maxLength={500}
+          rows={2}
+          placeholder="Ex : le pelage"
+          className="w-full resize-none border-b-2 border-ink bg-transparent py-3 font-serif text-lg leading-relaxed outline-none placeholder:text-ink-muted/50 focus:border-accent"
+          disabled={loading}
+        />
+      </label>
+
+      {error && (
+        <p className="font-mono text-xs uppercase tracking-[0.15em] text-accent">{error}</p>
+      )}
+
       <button
         type="submit"
         disabled={loading || !answer.trim()}
-        className="rounded-xl bg-amber-600 px-6 py-3 text-base font-semibold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="self-start border-2 border-ink px-6 py-3 font-mono text-xs uppercase tracking-[0.2em] transition-colors hover:bg-ink hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-ink"
       >
-        {loading ? "Calcul en cours..." : "Envoyer"}
+        {loading ? "Analyse en cours…" : "Soumettre au comité"}
       </button>
     </form>
   );
